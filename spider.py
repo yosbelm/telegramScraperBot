@@ -2,18 +2,25 @@ import scrapy
 from datetime import datetime
 import pytz
 from scrapy.crawler import CrawlerProcess
-import filtros_list
+from dotenv import load_dotenv
+import os
 
+
+load_dotenv()
+FILTROS = os.getenv("FILTROS").split(",")
+CANAL = os.getenv("CANAL")
+print(FILTROS)
+print(CANAL)
 
 
 class TelegramSpider(scrapy.Spider):
     name = "telegram"
-    start_urls = filtros_list.canal
+    start_urls = [CANAL]
 
     resultados = []
         
     def parse(self, response):
-        filtros = filtros_list.filtros
+        filtros = [f.strip().lower() for f in FILTROS]
 
         tz_ny = pytz.timezone('US/Eastern')
         hoy = datetime.now(tz_ny).strftime("%Y-%m-%d")
